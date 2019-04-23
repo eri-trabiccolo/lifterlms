@@ -156,6 +156,24 @@ implements LLMS_Interface_Post_Instructors
 	}
 
 	/**
+	 * Retrieve the number of enrolled students in the membership
+	 * @return   int
+	 * @since    [version]
+	 * @version  [version]
+	 */
+	public function get_student_count() {
+
+		$query = new LLMS_Student_Query( array(
+			'post_id' => $this->get( 'id' ),
+			'statuses' => array( 'enrolled' ),
+			'per_page' => 1,
+		) );
+
+		return $query->found_results;
+
+	}
+
+	/**
 	 * Get an array of student IDs based on enrollment status in the membership
 	 * @param    string|array  $statuses  list of enrollment statuses to query by
 	 *                                    status query is an OR relationship
