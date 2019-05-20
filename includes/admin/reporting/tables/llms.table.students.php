@@ -2,15 +2,18 @@
 /**
  * Students Reporting Table
  *
- * @since   3.2.0
- * @since   3.31.0 Allow filtering the table by Course or Membership
- * @version 3.28.0
+ * @since 3.2.0
+ * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * LLMS_Table_Students class.
+ *
+ * @since 3.2.0
+ * @since 3.31.0 Allow filtering the table by Course or Membership
+ * @since [version] TODO
  */
 class LLMS_Table_Students extends LLMS_Admin_Table {
 
@@ -85,12 +88,14 @@ class LLMS_Table_Students extends LLMS_Admin_Table {
 	protected $per_page = 25;
 
 	/**
-	 * Retrieve data for the columns
-	 * @param    string     $key        the column id / key
-	 * @param    obj        $student    Instance of the LLMS_Student
-	 * @return   mixed
-	 * @since    3.2.0
-	 * @version  3.15.0
+	 * Retrieve data for the columns.
+	 *
+	 * @since 3.2.0
+	 * @since [version] TODO
+	 *
+	 * @param string $key     the column id / key
+	 * @param obj    $student Instance of the LLMS_Student
+	 * @return mixed
 	 */
 	public function get_data( $key, $student ) {
 
@@ -123,7 +128,8 @@ class LLMS_Table_Students extends LLMS_Admin_Table {
 					'student_id' => $student->get_id(),
 				) );
 				$enrollments = $student->get_courses( array(
-					'limit' => 1,
+					'limit'       => 1,
+					'post_status' => array( 'publish', 'private' ),
 				) );
 				$value = '<a href="' . esc_url( $url ) . '">' . $enrollments['found'] . '</a>';
 			break;
@@ -188,13 +194,15 @@ class LLMS_Table_Students extends LLMS_Admin_Table {
 	}
 
 	/**
-	 * Retrieve data for a cell in an export file
-	 * Should be overridden in extending classes
-	 * @param    string     $key        the column id / key
-	 * @param    obj        $student    Instance of the LLMS_Student
-	 * @return   mixed
-	 * @since    3.15.0
-	 * @version  3.26.1
+	 * Retrieve data for a cell in an export file.
+	 * Should be overridden in extending classes.
+	 *
+	 * @since 3.15.0
+	 * @since [version] TODO
+	 *
+	 * @param  string $key     The column id / key
+	 * @param  obj    $student Instance of the LLMS_Student
+	 * @return mixed
 	 */
 	public function get_export_data( $key, $student ) {
 
@@ -211,7 +219,8 @@ class LLMS_Table_Students extends LLMS_Admin_Table {
 				$status = explode( '_', $key );
 				$status = array_pop( $status );
 				$courses = $student->get_courses( array(
-					'status' => $status,
+					'status'      => $status,
+					'post_status' => array( 'publish', 'private' )
 				) );
 				$titles = array();
 				foreach ( $courses['results'] as $id ) {
@@ -232,7 +241,8 @@ class LLMS_Table_Students extends LLMS_Admin_Table {
 				$status = explode( '_', $key );
 				$status = array_pop( $status );
 				$memberships = $student->get_memberships( array(
-					'status' => $status,
+					'status'      => $status,
+					'post_status' => array( 'publish', 'private' ),
 				) );
 				$titles = array();
 				foreach ( $memberships['results'] as $id ) {

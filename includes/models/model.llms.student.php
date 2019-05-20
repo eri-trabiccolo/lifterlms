@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 2.2.3
  * @since [version] Added the `delete_student_enrollment` public method that allows student's enrollment unrollment and deletion.
  * @since [version] Added the `delete_enrollment_postmeta` private method that allows student's enrollment postmeta deletion.
+ * @since [version] TODO
  */
 class LLMS_Student extends LLMS_Abstract_User_Data {
 
@@ -378,6 +379,10 @@ class LLMS_Student extends LLMS_Abstract_User_Data {
 
 	/**
 	 * Retrieve IDs of user's enrollments by post type (and additional criteria)
+	 *
+	 * @since 3.0.0
+	 * @since [version] TODO
+	 *
 	 * @param  string $post_type  name of the post type (course|membership)
 	 * @param  array  $args query arguments
 	 *                      @arg int    $limit    number of courses to return
@@ -388,19 +393,17 @@ class LLMS_Student extends LLMS_Abstract_User_Data {
 	 * @return array        "results" will contain an array of course ids
 	 *                      "more" will contain a boolean determining whether or not more courses are available beyond supplied limit/skip criteria
 	 *                      "found" will contain the total possible FOUND_ROWS() for the query
-	 * @since    3.0.0
-	 * @version  3.15.1
 	 */
 	public function get_enrollments( $post_type = 'course', $args = array() ) {
 
 		global $wpdb;
 
 		$args = wp_parse_args( $args, array(
-			'limit' => 20,
+			'limit'   => 20,
 			'orderby' => 'upm.updated_date',
-			'order' => 'DESC',
-			'skip' => 0,
-			'status' => 'any', // any, enrolled, cancelled, expired
+			'order'   => 'DESC',
+			'skip'    => 0,
+			'status'  => 'any', // any, enrolled, cancelled, expired
 		) );
 
 		// prefix membership
@@ -425,6 +428,14 @@ class LLMS_Student extends LLMS_Abstract_User_Data {
 			break;
 		}
 
+		// setup post (course/membership) status
+		$post_statuses       = empty( $args['post_status'] ) ? array( 'publish' ) : $args['post_status'];
+		$post_statuses_array = is_array( $post_statuses ) ? $post_statuses : array( $post_statuses );
+	    foreach ( $post_statuses_array as &$str ) {
+			$str = "'" . esc_sql( trim( $str ) ) . "'";
+		}
+		$post_statuses = implode( ',', $post_statuses_array );
+
 		// prepare additional status AND clauses
 		if ( 'any' !== $args['status'] ) {
 			$status = $wpdb->prepare( "
@@ -446,7 +457,7 @@ class LLMS_Student extends LLMS_Abstract_User_Data {
 			 FROM {$wpdb->prefix}lifterlms_user_postmeta AS upm
 			 JOIN {$wpdb->posts} AS p ON p.ID = upm.post_id
 			 WHERE p.post_type = %s
-			   AND p.post_status = 'publish'
+			   AND p.post_status IN ( $post_statuses )
 			   AND upm.meta_key = '_status'
 			   AND upm.user_id = %d
 			   {$status}

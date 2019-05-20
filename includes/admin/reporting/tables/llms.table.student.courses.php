@@ -2,12 +2,18 @@
 /**
  * Individual Student's Courses Table
  *
- * @since   3.2.0
- * @version 3.13.0
+ * @since 3.2.0
+ * @version [version]
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+/**
+ * Individual Student's Courses Table class.
+ *
+ * @since 3.2.0
+ * @since [version] TODO
+ */
 class LLMS_Table_Student_Courses extends LLMS_Admin_Table {
 
 	/**
@@ -112,11 +118,13 @@ class LLMS_Table_Student_Courses extends LLMS_Admin_Table {
 	}
 
 	/**
-	 * Execute a query to retrieve results from the table
-	 * @param    array      $args  array of query args
-	 * @return   void
-	 * @since    3.2.0
-	 * @version  3.2.0
+	 * Execute a query to retrieve results from the table.
+	 *
+	 * @since 3.2.0
+	 * @since [version] TODO
+	 *
+	 * @param array $args  array of query args
+	 * @return void
 	 */
 	public function get_results( $args = array() ) {
 
@@ -157,10 +165,11 @@ class LLMS_Table_Student_Courses extends LLMS_Admin_Table {
 		}
 
 		$courses = $this->student->get_courses( array(
-			'limit' => $per,
-			'skip' => ( $this->current_page - 1 ) * $per,
-			'orderby' => $orderby,
-			'order' => $order,
+			'limit'       => $per,
+			'skip'        => ( $this->current_page - 1 ) * $per,
+			'orderby'     => $orderby,
+			'order'       => $order,
+			'post_status' => array( 'publish', 'private' ),
 		) );
 
 		if ( $courses['more'] ) {
