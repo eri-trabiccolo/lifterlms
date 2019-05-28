@@ -29,6 +29,12 @@ class LLMS_View_Manager {
 	 */
 	public function add_actions() {
 
+		if ( ! empty( $_POST['action'] ) && 'create_pending_order' === $_POST['action'] ) {
+			if ( llms_verify_nonce( '_llms_checkout_nonce', 'create_pending_order', 'POST' ) ) {
+				return;
+			}
+		}
+
 		// if user can't bypass restrictions don't do anything
 		if ( ! llms_can_user_bypass_restrictions( get_current_user_id() ) ) {
 			return;

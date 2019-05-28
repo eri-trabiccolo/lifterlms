@@ -63,7 +63,7 @@ class LLMS_Shortcode_Checkout {
 
 		if ( self::$uid ) {
 			// ensure the user isn't enrolled in the product being purchased.
-			if ( isset( $atts['product'] ) && llms_is_user_enrolled( self::$uid, $atts['product']->get( 'id' ) ) ) {
+			if ( apply_filters( 'llms_checkout_notice_enrolled_students', isset( $atts['product'] ) && llms_is_user_enrolled( self::$uid, $atts['product']->get( 'id' ) ) ) ) {
 
 				llms_print_notice( sprintf(
 					// Translators: %s = The product type (course/membership).

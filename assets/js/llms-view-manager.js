@@ -46,7 +46,7 @@
 				return;
 			}
 
-			var $links = $( '.llms-widget-syllabus .llms-lesson a, .llms-course-progress a, .llms-lesson-preview a.llms-lesson-link, .llms-parent-course-link a.llms-lesson-link' );
+			var $links = $( '.llms-widget-syllabus .llms-lesson a, .llms-course-progress a, .llms-lesson-preview a.llms-lesson-link, .llms-parent-course-link a.llms-lesson-link, .llms-access-plans a.llms-button-action' );
 
 			$links.each( function() {
 

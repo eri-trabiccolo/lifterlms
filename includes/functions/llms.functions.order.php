@@ -297,6 +297,7 @@ function llms_setup_pending_order( $data = array() ) {
 			__( 'You already have access to this %2$s! Visit your dashboard <a href="%s">here.</a>', 'lifterlms' ),
 			llms_get_page_url( 'myaccount' ), $product->get_post_type_label()
 		) );
+		add_filter( 'llms_checkout_notice_enrolled_students', '__return_false' );
 		return $err;
 	}
 
