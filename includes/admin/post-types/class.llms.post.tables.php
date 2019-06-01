@@ -1,18 +1,25 @@
 <?php
 /**
- * General post table management
- * @since    3.0.0
- * @version  3.13.0
+ * General post table management.
+ *
+ * @since 3.0.0
+ * @version [version]
  */
 
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+defined( 'ABSPATH' ) || exit;
 
+/**
+ * General post table management class.
+ *
+ * @since 3.0.0
+ * @since [version] Made sure clone and export links are added only for users who can edit the very post type.
+ */
 class LLMS_Admin_Post_Tables {
 
 	/**
 	 * Constructor
-	 * @since    3.0.0
-	 * @version  3.0.0
+	 *
+	 * @since 3.0.0
 	 */
 	public function __construct() {
 
@@ -27,15 +34,23 @@ class LLMS_Admin_Post_Tables {
 	}
 
 	/**
-	 * Adds clone links to post types which support lifterlms post cloning
-	 * @param    array     $actions  existing actions
-	 * @param    obj       $post    WP_Post object
-	 * @since    3.3.0
-	 * @version  3.13.0
+	 * Adds clone links to post types which support lifterlms post cloning.
+	 *
+	 * @since 3.3.0
+	 * @since [version] Made sure clone and export links are added only for users who can edit the very post type.
+	 *
+	 * @param array $actions Existing actions.
+	 * @param obj   $post    WP_Post object.
+	 * @return array $actions The new actions.
 	 */
 	public function add_links( $actions, $post ) {
+		$post_caps = LLMS_Post_Types::get_post_type_caps( $post->post_type );
 
-		if ( current_user_can( 'edit_post', $post->ID ) && post_type_supports( $post->post_type, 'llms-clone-post' ) ) {
+		if ( empty( $post_caps['edit_post'] ) ) {
+			return $actions;
+		}
+
+		if ( current_user_can( $post_caps['edit_post'], $post->ID ) && post_type_supports( $post->post_type, 'llms-clone-post' ) ) {
 			$url = add_query_arg( array(
 				'post_type' => $post->post_type,
 				'action' => 'llms-clone-post',
@@ -44,7 +59,7 @@ class LLMS_Admin_Post_Tables {
 			$actions['llms-clone'] = '<a href="' . esc_url( $url ) . '">' . __( 'Clone', 'lifterlms' ) . '</a>';
 		}
 
-		if ( current_user_can( 'edit_post', $post->ID ) && post_type_supports( $post->post_type, 'llms-export-post' ) ) {
+		if ( current_user_can( $post_caps['edit_post'], $post->ID ) && post_type_supports( $post->post_type, 'llms-export-post' ) ) {
 			$url = add_query_arg( array(
 				'post_type' => $post->post_type,
 				'action' => 'llms-export-post',
@@ -58,10 +73,11 @@ class LLMS_Admin_Post_Tables {
 	}
 
 	/**
-	 * Handle events for our custom postrow actions
-	 * @return   void
-	 * @since    3.3.0
-	 * @version  3.3.0
+	 * Handle events for our custom postrow actions.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @return void
 	 */
 	public function handle_link_actions() {
 
@@ -109,13 +125,14 @@ class LLMS_Admin_Post_Tables {
 	}
 
 	/**
-	 * Get the HTML for a post type select2 filter
-	 * @param    string     $name       name of the select element
-	 * @param    string     $post_type  post type to search by
-	 * @param    array      $selected   array of POST IDs to use for the pre-selected options on page load
-	 * @return   string
+	 * Get the HTML for a post type select2 filter.
+	 *
 	 * @since    3.12.0
-	 * @version  3.12.0
+	 *
+	 * @param string $name      The name of the select element.
+	 * @param string $post_type Optional. The post type to search by. Default 'course'.
+	 * @param array  $selected  Optional. An array of POST IDs to use for the pre-selected options on page load. Default empty array.
+	 * @return string
 	 */
 	public static function get_post_type_filter_html( $name, $post_type = 'course', $selected = array() ) {
 		$obj = get_post_type_object( $post_type );
