@@ -932,7 +932,6 @@ abstract class LLMS_Post_Model implements JsonSerializable {
 
 	}
 
-
 	/**
 	 * Bulk setter.
 	 *
@@ -963,36 +962,20 @@ abstract class LLMS_Post_Model implements JsonSerializable {
 
 		foreach ( $model_array as $key => $val ) {
 
-			$val = $this->scrub( $key, $val );
+			$val           = $this->apply_update_filter( $this->scrub( $key, $val ), $key );
+			$llms_post_key = $key;
 
-			// update WordPress Post Properties using the wp_insert_post() function
-			if ( in_array( $key, $post_properties ) ) {
+			if ( is_wp_error( $val ) ) {
+				continue;
+			}
 
-				$type           = 'post';
-				$llms_post_key  = "post_{$key}";
-
-				switch ( $key ) {
-
-					case 'content':
-						$val = apply_filters( 'content_save_pre', $val );
-					break;
-
-					case 'excerpt':
-						$val = apply_filters( 'excerpt_save_pre', $val );
-					break;
-
-					case 'menu_order':
-						$llms_post_key = 'menu_order';
-					break;
-
-					case 'title':
-						$val = apply_filters( 'title_save_pre', $val );
-					break;
-				}
+			if ( in_array( $key, array_keys( $this->get_post_properties() ) ) ) {
+				$llms_post_key = 'menu_order' === $key ? $key : 'post_' . $key;
+				$type          = 'post';
 			} elseif ( ! in_array( $key, $unsettable_properties ) ) {
 				$type          = 'meta';
-				$llms_post_key = $key;
 			} else {
+				// we actually should never come here, but apply_update_filters can be overridden hence can produce unexpected results.
 				continue;
 			}
 
@@ -1047,6 +1030,44 @@ abstract class LLMS_Post_Model implements JsonSerializable {
 		return true;
 	}
 
+	/**
+	 * Apply filters to the properties being updated.
+	 *
+	 * @since [version]
+	 *
+	 * @param mixed  $val Property value.
+	 * @param string $key Property key.
+	 * @return mixed|WP_Error The processed value or WP_Error if the property is not settable.
+	 *
+	 */
+	protected function apply_update_filter( $val, $key ) {
+
+		// update WordPress Post Properties using the wp_insert_post() function
+		if ( in_array( $key, array_keys( $this->get_post_properties() ) ) ) {
+			$type           = 'post';
+			$llms_post_key  = "post_{$key}";
+
+			switch ( $key ) {
+
+				case 'content':
+					$val = apply_filters( 'content_save_pre', $val );
+				break;
+
+				case 'excerpt':
+					$val = apply_filters( 'excerpt_save_pre', $val );
+				break;
+
+				case 'title':
+					$val = apply_filters( 'title_save_pre', $val );
+				break;
+			}
+		} elseif ( in_array( $key, $this->get_unsettable_properties() ) ) {
+			return new WP_Error( 'invalid_data', sprintf( __( 'The property %s is not settable', 'lifterlms' ), $key ) );
+		}
+
+		return $val;
+
+	}
 
 	/**
 	 * Update terms for the post for a given taxonomy
