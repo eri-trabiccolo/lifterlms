@@ -78,6 +78,14 @@ final class LifterLMS {
 	public $session = null;
 
 	/**
+	 * Modules Loaded
+	 *
+	 * @var array
+	 * @since [version]
+	 */
+	public $modules = array();
+
+	/**
 	 * Main Instance of LifterLMS
 	 * Ensures only one instance of LifterLMS is loaded or can be loaded.
 	 *
@@ -454,8 +462,11 @@ final class LifterLMS {
 	 *
 	 * @return void
 	 */
-	private function load_modules(){
-		include_once 'includes/modules/core/class-llms-module-loader.php';
+	private function load_modules() {
+
+		include_once 'includes/modules/class-llms-module-loader.php';
+
+		$this->modules = LLMS_Module_Loader::load();
 	}
 
 	/**
