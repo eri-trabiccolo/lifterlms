@@ -120,6 +120,9 @@ final class LifterLMS {
 		// Include required files
 		$this->includes();
 
+		// load modules.
+		$this->load_modules();
+
 		// setup session stuff
 		$this->session = new LLMS_Session();
 
@@ -442,6 +445,17 @@ final class LifterLMS {
 
 		$this->includes_theme_support();
 
+	}
+
+	/**
+	 * Load all LifterLMS Modules.
+	 *
+	 * @since [version] Introduced
+	 *
+	 * @return void
+	 */
+	private function load_modules(){
+		include_once 'includes/modules/core/class-llms-module-loader.php';
 	}
 
 	/**
