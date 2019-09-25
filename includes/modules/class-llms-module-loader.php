@@ -10,93 +10,141 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if( ! class_exists( 'LLMS_Module_Loader' ) ) {
+/**
+ * Loads all modules
+ *
+ * Each module is an array of the following information:
+ *  array(
+ *  	'name'		=> 'module-name',
+ * 		'file_path'	=> 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
+ * 		'constant_name'	=> 'LLMS_MODULE_NAME',
+ *  );
+ * Like this dummy model, core modules also follow this naming convention.
+ *
+ * The boolean value of the LLMS_MODULE_NAME constant acts like a switch
+ * to turn a module on or off. By default, if the value of this constant isn't explicitly set
+ * (in wp.config.php or elsewhere), it is assumed to be true.
+ * So, to turn a module off, you add the following line to wp-config.php:
+ *  define( 'LLMS_MODULE_NAME', false );
+ *
+ * For core modules, this information is extracted from the directory structure inside
+ * lifterlms/includes/modules/. Custom modules can obviously be added or used to replace existing modules
+ * using lifterlms_modules_to_load filter which provides an array of all the modules about to be loaded.
+ *
+ * @since [version]
+ */
+class LLMS_Module_Loader {
 
 	/**
-	 * Loads all modules
+	 * Loads Modules.
 	 *
-	 * @since [version]
+	 * @since    [version] Introduced
 	 */
-	class LLMS_Module_Loader {
+	public static function load() {
 
 		/**
-		 * Loads Modules.
+		 * Filters list of LifterLMS modules just before load.
 		 *
-		 * @since    [version] Introduced
+		 * The modules are listed as indexed elements in an array:
+		 *  $modules = array(
+		 * 		'module_name' => array(
+		 *  		'name'		=> 'module-name',
+		 * 			'file_path'	=> 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
+		 * 			'constant_name'	=> 'LLMS_MODULE_NAME',
+		 *  	),
+		 * 		'module2_name' => array(
+		 * 			...
+		 * 		),
+		 * 		...
+		 *  )
+		 *
+		 * @since	[version] Introduced.
 		 */
-		public static function load() {
+		$to_load = apply_filters( 'lifterlms_modules_to_load', self::load_info() );
 
-			/**
-			 * Filters list of LifterLMS modules just before load.
-			 *
-			 * @since	[version] Introduced.
-			 */
-			$to_load = apply_filters( 'lifterlms/modules/list', self::load_info() );
+		// initialise after-load information.
+		$loaded = array();
 
-			$loaded = array();
+		foreach ( $to_load as $module ) {
 
-			foreach ( $to_load as $module ) {
-
-				// define the constant as true if it hasn't been defined by the user in wp-config.php or similar.
-				if ( ! defined( $module['constant'] ) ) {
-					define( $module['constant'] , true );
-				}
-
-				// if the constant's value is true and the class file exists, include the module class
-				if ( constant( $module['constant'] ) === true && file_exists( $module['file_path'] ) ) {
-					include_once $module['file_path'];
-				}
-
-				$loaded[ $module['name'] ] = $module;
-
+			// define the constant as true if it hasn't been defined explicitly.
+			if ( ! defined( $module['constant_name'] ) ) {
+				define( $module['constant_name'] , true );
 			}
 
-			/**
-			 * Fires after all the modules are loaded.
-			 *
-			 * @since	[version] Introduced.
-			 */
-			do_action( 'lifterlms/modules/loaded', $loaded );
+			// bail, if the constant's value is explcitly defined to false.
+			if ( constant( $module['constant_name'] ) === false ) {
+				continue;
+			}
 
-			return $loaded;
+			// bail, if the main file doesn't exist.
+			if( ! file_exists( $module['file_path'] ) ) {
+				continue;
+			}
+
+			// all fine, include the file.
+			include_once $module['file_path'];
+
+			// add module's info to loaded information.
+			$loaded[ $module['name'] ] = $module;
+
+			/**
+			 * Fires after a particular module is loaded.
+			 *
+			 * This only contains basic information about what module was loaded.
+			 * If you want specific information related to the modules' functionality,
+			 * look for hooks within the module itself.
+			 *
+			 * @since [version]
+			 */
+			do_action( "lifterlms_module_{$module['name']}_loaded", $module );
 
 		}
 
 		/**
-		 * Loads Module Information.
+		 * Fires after all the modules are loaded.
 		 *
-		 * @since    [version]
+		 * @since	[version] Introduced.
 		 */
-		private static function load_info() {
+		do_action( 'lifterlms_modules_loaded', $loaded );
 
-			// get a list of directories inside the modules directory.
-			$directories = glob( LLMS_PLUGIN_DIR . 'includes/modules/*' , GLOB_ONLYDIR );
+		return $loaded;
 
-			$modules = array();
+	}
 
-			// loop through every directory
-			foreach ( $directories as $module ) {
+	/**
+	 * Loads Module Information.
+	 *
+	 * @since    [version]
+	 */
+	private static function load_info() {
 
-				// the name of the module is the same as the name of the directory. eg "certificate-builder"
-				$module_name = basename( $module );
+		// get a list of directories inside the modules directory.
+		$directories = glob( LLMS_PLUGIN_DIR . 'includes/modules/*' , GLOB_ONLYDIR );
 
-				$modules[ $module_name ] = array(
-					'name' => $module_name,
-				);
+		$modules = array();
 
-				// the name of the class file is similar. eg "class-llms-certificate-builder.php"
-				$modules[ $module_name ]['file_path'] = "$module/class-llms-$module_name.php";
+		// loop through every directory
+		foreach ( $directories as $module ) {
 
-				// the constant name also uses similar conventions. eg "LLMS_CERTIFICATE_BUILDER"
-				$modules[ $module_name ]['constant_name'] = 'LLMS_' . strtoupper( str_replace( '-', '_', $module_name ) );
+			// the name of the module is the same as the name of the directory. eg "certificate-builder"
+			$module_name = basename( $module );
 
-				unset( $module_name );
+			$modules[ $module_name ] = array(
+				'name' => $module_name,
+			);
 
-			}
+			// the name of the class file is similar. eg "class-llms-certificate-builder.php"
+			$modules[ $module_name ]['file_path'] = "{$module}/class-llms-{$module_name}.php";
 
-			return $modules;
+			// the constant name also uses similar conventions. eg "LLMS_CERTIFICATE_BUILDER"
+			$modules[ $module_name ]['constant_name'] = 'LLMS_' . strtoupper( str_replace( '-', '_', $module_name ) );
+
+			unset( $module_name );
 
 		}
+
+		return $modules;
 
 	}
 
