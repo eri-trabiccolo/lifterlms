@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * Each module is an array of the following information:
  *  array(
- *  	'name'		=> 'module-name',
- * 		'file_path'	=> 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
- * 		'constant_name'	=> 'LLMS_MODULE_NAME',
+ *   'name'          => 'module-name',
+ * 	 'file_path'     => 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
+ * 	 'constant_name' => 'LLMS_MODULE_NAME',
  *  );
  * Like this dummy model, core modules also follow this naming convention.
  *
@@ -47,18 +47,18 @@ class LLMS_Module_Loader {
 		 *
 		 * The modules are listed as indexed elements in an array:
 		 *  $modules = array(
-		 * 		'module_name' => array(
-		 *  		'name'		=> 'module-name',
-		 * 			'file_path'	=> 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
-		 * 			'constant_name'	=> 'LLMS_MODULE_NAME',
-		 *  	),
-		 * 		'module2_name' => array(
-		 * 			...
-		 * 		),
-		 * 		...
+		 * 	 'module_name' => array(
+		 *    'name'          => 'module-name',
+		 *    'file_path'     => 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
+		 *    'constant_name' => 'LLMS_MODULE_NAME',
+		 *   ),
+		 * 	 'module2_name' => array(
+		 *     ...
+		 * 	 ),
+		 * 	 ...
 		 *  )
 		 *
-		 * @since	[version] Introduced.
+		 * @since    [version] Introduced.
 		 */
 		$to_load = apply_filters( 'lifterlms_modules_to_load', self::load_info() );
 
@@ -69,7 +69,7 @@ class LLMS_Module_Loader {
 
 			// define the constant as true if it hasn't been defined explicitly.
 			if ( ! defined( $module['constant_name'] ) ) {
-				define( $module['constant_name'] , true );
+				define( $module['constant_name'], true );
 			}
 
 			// bail, if the constant's value is explcitly defined to false.
@@ -78,7 +78,7 @@ class LLMS_Module_Loader {
 			}
 
 			// bail, if the main file doesn't exist.
-			if( ! file_exists( $module['file_path'] ) ) {
+			if ( ! file_exists( $module['file_path'] ) ) {
 				continue;
 			}
 
@@ -104,7 +104,7 @@ class LLMS_Module_Loader {
 		/**
 		 * Fires after all the modules are loaded.
 		 *
-		 * @since	[version] Introduced.
+		 * @since    [version] Introduced.
 		 */
 		do_action( 'lifterlms_modules_loaded', $loaded );
 
@@ -120,7 +120,7 @@ class LLMS_Module_Loader {
 	private static function load_info() {
 
 		// get a list of directories inside the modules directory.
-		$directories = glob( LLMS_PLUGIN_DIR . 'includes/modules/*' , GLOB_ONLYDIR );
+		$directories = glob( LLMS_PLUGIN_DIR . 'includes/modules/*', GLOB_ONLYDIR );
 
 		$modules = array();
 
