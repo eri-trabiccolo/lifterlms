@@ -4,8 +4,9 @@
  *
  * @package LifterLMS/Modules/Certificate_Builder
  *
- * @version	[version]
+ * @version    [version]
  */
+
 /**
  * Generates builder url.
  *

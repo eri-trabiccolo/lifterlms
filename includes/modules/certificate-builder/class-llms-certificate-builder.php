@@ -22,6 +22,14 @@ class LLMS_Certificate_Builder {
 	 */
 	public function __construct() {
 
+		$this->init();
+
+	}
+
+	/**
+	 *
+	 */
+	public function init(){
 		// load all constants
 		$this->constants();
 
@@ -36,9 +44,6 @@ class LLMS_Certificate_Builder {
 
 		// load builder
 		$this->load_builder();
-
-		// hook
-		$this->hook();
 
 	}
 
@@ -69,6 +74,9 @@ class LLMS_Certificate_Builder {
 		include_once 'includes/admin/class-llms-certificate-builder-toolbar.php';
 	}
 
+	/**
+	 *
+	 */
 	public function load_migrator() {
 		if ( ! LLMS_CERTIFICATE_ENABLE_MIGRATION ){
 			return;
@@ -80,11 +88,17 @@ class LLMS_Certificate_Builder {
 		new LLMS_Certificate_Migration_Metabox();
 	}
 
+	/**
+	 *
+	 */
 	public function extend_editor() {
 		include_once 'includes/admin/class-llms-certificate-post-table.php';
 		include_once 'includes/admin/class-llms-certificate-post-editor.php';
 	}
 
+	/**
+	 *
+	 */
 	public function load_builder() {
 		include_once 'includes/llms-certificate-builder-functions.php';
 		if ( ! is_admin() ) {
@@ -93,15 +107,6 @@ class LLMS_Certificate_Builder {
 		}
 	}
 
-	public function hook(){
-		add_action( 'init', array( $this, 'register_legacy_status' ) );
-	}
-
-	public function register_legacy_status(){
-		register_post_status( 'llms-legacy', array(
-			'public'         => false,
-		) );
-	}
 }
 
 new LLMS_Certificate_Builder();
