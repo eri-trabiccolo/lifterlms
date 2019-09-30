@@ -15,13 +15,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * Each module is an array of the following information:
  *
- * ```
- * $module = array(
- *  'name' => 'module-name',
- * 	'file_path' => 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
- * 	'constant_name' => 'LLMS_MODULE_NAME',
- * );
- * ```
+ *    $module = array(
+ *        'name' => 'module-name',
+ *        'file_path' => 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
+ *        'constant_name' => 'LLMS_MODULE_NAME',
+ *    );
+ *
  * Like this dummy model, core modules also follow this naming convention.
  *
  * The boolean value of the LLMS_MODULE_NAME constant acts like a switch
@@ -29,9 +28,7 @@ defined( 'ABSPATH' ) || exit;
  * (in wp.config.php or elsewhere), it is assumed to be true.
  * So, to turn a module off, you add the following line to wp-config.php:
  *
- * ```
- *  define( 'LLMS_MODULE_NAME', false );
- * ```
+ *    define( 'LLMS_MODULE_NAME', false );
  *
  * For core modules, this information is extracted from the directory structure inside
  * lifterlms/includes/modules/. Custom modules can obviously be added or used to replace existing modules
@@ -52,17 +49,18 @@ class LLMS_Module_Loader {
 		 * Filters list of LifterLMS modules just before load.
 		 *
 		 * The modules are listed as indexed elements in an array:
-		 *  $modules = array(
-		 * 	 'module_name' => array(
-		 *    'name'          => 'module-name',
-		 *    'file_path'     => 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
-		 *    'constant_name' => 'LLMS_MODULE_NAME',
-		 *   ),
-		 * 	 'module2_name' => array(
-		 *    ...
-		 * 	 ),
-		 * 	 ...
-		 *  )
+		 *
+		 *    $modules = array(
+		 *        'module_name' => array(
+		 *            'name'          => 'module-name',
+		 *            'file_path'     => 'lifterlms/includes/modules/module-name/class-llms-module-name.php',
+		 *            'constant_name' => 'LLMS_MODULE_NAME',
+		 *        ),
+		 *        'module2_name' => array(
+		 *            ...
+		 *        ),
+		 *        ...
+		 *    )
 		 *
 		 * @since    [version] Introduced.
 		 */
