@@ -146,7 +146,7 @@ class LLMS_Webpage_Fonts {
 		}
 
 		// DOMDocument instance.
-		$this->dom = new DOMDocument;
+		$this->dom = new DOMDocument();
 
 		// attempt loading the DOM.
 		$dom_loaded = $this->dom->loadHTML( $this->html );
@@ -156,7 +156,7 @@ class LLMS_Webpage_Fonts {
 			return new WP_Error( 'dom-failed', __( 'Could not load DOM for the page', 'lifterlms' ) );
 		}
 
-		//everything worked out fine; document was loaded correctly!
+		// everything worked out fine; document was loaded correctly!
 		return true;
 
 	}

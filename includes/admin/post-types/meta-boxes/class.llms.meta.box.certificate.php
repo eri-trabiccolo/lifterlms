@@ -29,6 +29,40 @@ class LLMS_Meta_Box_Certificate extends LLMS_Admin_Metabox {
 	}
 
 	/**
+	 * Conditionally registers metabox on legacy certificates
+	 *
+	 * @return void
+	 * @since [version] Introduced
+	 */
+	public function register() {
+
+		// the migrator class will only exist when certificate builder module is available.
+		if( ! class_exists( 'LLMS_Certificate_Migrator' ) ) {
+			parent::register();
+			return;
+		}
+
+		global $post;
+
+		// if this certificate has a legacy certificate; don't register the metabox.
+		$has_legacy = ! empty ( LLMS_Certificate_Migrator::has_legacy( $post->ID ) );
+		if ( $has_legacy ) {
+			return;
+		}
+
+		// only if this certificate is a legacy one, register metabox.
+		$is_legacy = LLMS_Certificate_Migrator::is_legacy( $post->ID );
+		if ( $is_legacy ) {
+			parent::register();
+			return;
+		}
+
+		// by default, don't register metabox.
+		return;
+
+	}
+
+	/**
 	 * Builds array of metabox options.
 	 * Array is called in output method to display options.
 	 * Appropriate fields are generated based on type.
