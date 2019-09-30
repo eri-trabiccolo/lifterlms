@@ -37,7 +37,7 @@ class LLMS_Meta_Box_Certificate extends LLMS_Admin_Metabox {
 	public function register() {
 
 		// the migrator class will only exist when certificate builder module is available.
-		if( ! class_exists( 'LLMS_Certificate_Migrator' ) ) {
+		if ( ! class_exists( 'LLMS_Certificate_Migrator' ) ) {
 			parent::register();
 			return;
 		}
@@ -45,7 +45,8 @@ class LLMS_Meta_Box_Certificate extends LLMS_Admin_Metabox {
 		global $post;
 
 		// if this certificate has a legacy certificate; don't register the metabox.
-		$has_legacy = ! empty ( LLMS_Certificate_Migrator::has_legacy( $post->ID ) );
+		$has_legacy = ! empty( LLMS_Certificate_Migrator::has_legacy( $post->ID ) );
+
 		if ( $has_legacy ) {
 			return;
 		}

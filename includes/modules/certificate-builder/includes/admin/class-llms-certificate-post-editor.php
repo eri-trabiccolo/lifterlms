@@ -47,7 +47,7 @@ class LLMS_Certificate_Editor {
 	/**
 	 * Set
 	 */
-	protected function configure(){
+	protected function configure() {
 
 		$builder_url = llms_certificate_build_url();
 
@@ -66,7 +66,7 @@ class LLMS_Certificate_Editor {
 				),
 			),
 			'edit' => array(
-				'title' => __( "Drag & Drop Builder is active on this certificate.", 'lifterlms' ),
+				'title' => __( 'Drag & Drop Builder is active on this certificate.', 'lifterlms' ),
 				'buttons' => array(
 					array(
 						'class' => array( 'llms-certificate-switch', 'button-secondary' ),
@@ -130,10 +130,10 @@ class LLMS_Certificate_Editor {
 
 	}
 
-	protected function hook(){
+	protected function hook() {
 
 		// hook redirection for legacy certificates.
-		add_action( 'admin_init', array( $this, 'redirect_legacy') );
+		add_action( 'admin_init', array( $this, 'redirect_legacy' ) );
 
 		// hook editor overlay.
 		add_action( 'current_screen', array( $this, 'maybe_overlay_editor' ) );
@@ -143,17 +143,19 @@ class LLMS_Certificate_Editor {
 
 	}
 
-	// limit this to certificate post tyopes only
-	public function redirect_legacy(){
+	/**
+	 * limit this to certificate post types only
+	 */
+	public function redirect_legacy() {
 
 		$post_id = llms_filter_input( INPUT_GET, 'post', FILTER_VALIDATE_INT );
 
-		if( empty( $post_id ) ){
+		if ( empty( $post_id ) ){
 			$post_id = llms_filter_input( INPUT_POST, 'post', FILTER_VALIDATE_INT );
 		}
 
 		// bail if not single post action
-		if ( empty ( $post_id ) ) {
+		if ( empty( $post_id ) ) {
 			return;
 		}
 
@@ -225,9 +227,8 @@ class LLMS_Certificate_Editor {
 	 * Sets up Overlay configuration
 	 *
 	 * @since [version] Introduced
-	 *
 	 */
-	private function set_config( $action = '' ){
+	private function set_config( $action = '' ) {
 
 		$this->configure();
 
@@ -241,17 +242,17 @@ class LLMS_Certificate_Editor {
 
 		$post_id = llms_filter_input( INPUT_GET, 'post', FILTER_VALIDATE_INT );
 
-		if( empty( $post_id ) ){
+		if ( empty( $post_id ) ) {
 			$post_id = llms_filter_input( INPUT_POST, 'post', FILTER_VALIDATE_INT );
 		}
 
 		// override for current migration
-		if ( true === llms_filter_input( INPUT_GET, 'llms-certificate-migrate', FILTER_VALIDATE_BOOLEAN ) ){
+		if ( true === llms_filter_input( INPUT_GET, 'llms-certificate-migrate', FILTER_VALIDATE_BOOLEAN ) ) {
 			$this->current_overlay_config = $this->overlay_configs['migrated_to'];
 		}
 
 		// override for legacy redirection
-		if ( true === llms_filter_input( INPUT_GET, 'llms-certificate-legacy-redirect', FILTER_VALIDATE_BOOLEAN ) ){
+		if ( true === llms_filter_input( INPUT_GET, 'llms-certificate-legacy-redirect', FILTER_VALIDATE_BOOLEAN ) ) {
 			$this->current_overlay_config = $this->overlay_configs['legacy_redirect'];
 		}
 
@@ -384,8 +385,7 @@ class LLMS_Certificate_Editor {
 	 * @param WP_Post $post Post Object
 	 *
 	 * @return string
-	 *
-	 * @since    [version]
+	 * @since  [version]
 	 */
 	public function default_content( $content, $post ) {
 

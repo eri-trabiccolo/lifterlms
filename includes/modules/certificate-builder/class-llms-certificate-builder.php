@@ -27,9 +27,9 @@ class LLMS_Certificate_Builder {
 	}
 
 	/**
-	 *
+	 * Initialise
 	 */
-	public function init(){
+	public function init() {
 		// load all constants
 		$this->constants();
 
@@ -48,7 +48,7 @@ class LLMS_Certificate_Builder {
 	}
 
 	/**
-	 *
+	 * Define constants
 	 */
 	public function constants() {
 
@@ -65,7 +65,7 @@ class LLMS_Certificate_Builder {
 	}
 
 	/**
-	 *
+	 * Add toolbar button
 	 */
 	private function toolbar_button(){
 		if ( ! LLMS_CERTIFICATE_ENABLE_TOOLBAR_BUTTON ){
@@ -75,7 +75,7 @@ class LLMS_Certificate_Builder {
 	}
 
 	/**
-	 *
+	 * Load migration functionality
 	 */
 	public function load_migrator() {
 		if ( ! LLMS_CERTIFICATE_ENABLE_MIGRATION ){
@@ -89,7 +89,7 @@ class LLMS_Certificate_Builder {
 	}
 
 	/**
-	 *
+	 * Extend post editor.
 	 */
 	public function extend_editor() {
 		include_once 'includes/admin/class-llms-certificate-post-table.php';
@@ -97,7 +97,7 @@ class LLMS_Certificate_Builder {
 	}
 
 	/**
-	 *
+	 * Load Builder UI
 	 */
 	public function load_builder() {
 		include_once 'includes/llms-certificate-builder-functions.php';

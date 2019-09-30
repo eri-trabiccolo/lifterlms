@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since [version] Introduced
  */
-
 class LLMS_Certificate_Builder_Toolbar {
 
 	/**

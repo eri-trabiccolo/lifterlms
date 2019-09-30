@@ -51,21 +51,10 @@ class LLMS_Certificate_Migration_Metabox extends LLMS_Admin_Metabox {
 	 *
 	 * @since 3.0.0
 	 * @since 3.19.0 Unknown.
-	 *
-	 * @return string|null
 	 */
 	public function output() {
 
 		global $post;
-
-
-		/*
-		if ( $order->is_legacy() ) {
-			return _e( 'The status of a Legacy order cannot be changed.', 'lifterlms' );
-		}
-
-		include LLMS_PLUGIN_DIR . 'includes/admin/views/metaboxes/view-order-submit.php';
-		*/
 
 		$legacy = LLMS_Certificate_Migrator::has_legacy( $post->ID );
 
@@ -80,15 +69,13 @@ class LLMS_Certificate_Migration_Metabox extends LLMS_Admin_Metabox {
 			<?php
 		}
 
-		if( $is_legacy ) {
+		if ( $is_legacy ) {
 			?>
 
 			<input class="button-primary" type="submit" name="llms_certificate_migrate" value="Migrate to new Builder"/>
 			<a>Migrate all certificates to new Builder</a>
 			<?php
 		}
-
-
 
 		wp_nonce_field( 'lifterlms_save_data', 'lifterlms_meta_nonce' );
 
@@ -110,11 +97,11 @@ class LLMS_Certificate_Migration_Metabox extends LLMS_Admin_Metabox {
 			return;
 		}
 
-		if( llms_filter_input( INPUT_POST, 'llms_certificate_migrate' ) ) {
+		if ( llms_filter_input( INPUT_POST, 'llms_certificate_migrate' ) ) {
 			$this->migrate( $post_id );
 		}
 
-		if( llms_filter_input( INPUT_POST, 'llms_certificate_rollback' ) ) {
+		if ( llms_filter_input( INPUT_POST, 'llms_certificate_rollback' ) ) {
 			LLMS_Certificate_Migrator::rollback( $post_id );
 		}
 
@@ -136,7 +123,7 @@ class LLMS_Certificate_Migration_Metabox extends LLMS_Admin_Metabox {
 		);
 
 		// redirect to new certificate's editor.
-		if( wp_redirect( $redirect_url ) ){
+		if ( wp_redirect( $redirect_url ) ) {
 			exit();
 		}
 	}
@@ -157,7 +144,7 @@ class LLMS_Certificate_Migration_Metabox extends LLMS_Admin_Metabox {
 		);
 
 		// redirect to new certificate's editor.
-		if( wp_redirect( $redirect_url ) ){
+		if ( wp_redirect( $redirect_url ) ) {
 			exit();
 		}
 	}

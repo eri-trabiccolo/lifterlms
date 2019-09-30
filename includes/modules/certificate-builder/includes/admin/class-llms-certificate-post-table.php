@@ -29,7 +29,7 @@ class LLMS_Certificate_Post_Table {
 		$this->hook();
 	}
 
-	public function hook(){
+	public function hook() {
 		// hook build link to posts table.
 		add_filter( 'post_row_actions', array( $this, 'build_action' ), 10, 2 );
 	}
@@ -37,7 +37,7 @@ class LLMS_Certificate_Post_Table {
 	/**
 	 * Adds builder link to post actions.
 	 *
-	 * @param array $actions
+	 * @param array   $actions
 	 * @param WP_Post $post
 	 *
 	 * @return array

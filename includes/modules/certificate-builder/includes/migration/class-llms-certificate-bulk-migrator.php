@@ -70,7 +70,7 @@ class LLMS_Certificate_Bulk_Migrator {
 			$count = count( $migrated );
 
 			$tools['certificates-bulk-rollback']       = array(
-				'description' =>  sprintf( _n( 'You have %d migrated certificate that can be rolled back.', 'You have %d migrated certificates that can be rolled back.', $count, 'lifterlms' ), $count ),
+				'description' => sprintf( _n( 'You have %d migrated certificate that can be rolled back.', 'You have %d migrated certificates that can be rolled back.', $count, 'lifterlms' ), $count ),
 				'label'       => __( 'Certificates Bulk Rollback', 'lifterlms' ),
 				'text'        => __( 'Rollback all migrated certificates to legacy system', 'lifterlms' ),
 			);
@@ -104,7 +104,7 @@ class LLMS_Certificate_Bulk_Migrator {
 	 *
 	 * @since [version] Introduced
 	 */
-	public function get_migrated(){
+	public function get_migrated() {
 
 		global $wpdb;
 
@@ -119,7 +119,7 @@ class LLMS_Certificate_Bulk_Migrator {
 	 * @since [version] Introduced
 	 */
 	public function process( $tool ) {
-		if ( ! in_array ( $tool, array( 'certificates-bulk-migrate', 'certificates-bulk-rollback' ) ) ){
+		if ( ! in_array( $tool, array( 'certificates-bulk-migrate', 'certificates-bulk-rollback' ) ) ) {
 			return;
 		}
 
@@ -137,15 +137,14 @@ class LLMS_Certificate_Bulk_Migrator {
 
 		$migrated = $this->get_migrated();
 
-		if( empty( $migrated ) ){
+		if ( empty( $migrated ) ) {
 			return;
 		}
 
 		$migrated_ids = array();
 
-
 		foreach ( $migrated as $migrated_id ) {
-			$migrated_ids[]= LLMS_Certificate_Migrator::migrate( $migrated_id );
+			$migrated_ids[] = LLMS_Certificate_Migrator::migrate( $migrated_id );
 		}
 
 		return $migrated_ids;
@@ -161,12 +160,11 @@ class LLMS_Certificate_Bulk_Migrator {
 
 		$legacies = $this->get_legacies();
 
-		if( empty( $legacies ) ){
+		if ( empty( $legacies ) ) {
 			return;
 		}
 
 		$legacy_ids = array();
-
 
 		foreach ( $legacies as $legacy_id ) {
 			$legacy_ids[] = LLMS_Certificate_Migrator::rollback( $legacy_id );

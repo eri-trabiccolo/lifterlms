@@ -36,7 +36,7 @@ class LLMS_Certificate_Migrator {
 			return new WP_Error( 'is-legacy', __( 'This is already a legacied version!', 'lifterlms' ) );
 		}
 
-		//  check if this already has a legacy.
+		// check if this already has a legacy.
 		if ( false !== self::has_legacy( $certificate_id ) ) {
 			return new WP_Error( 'has-legacy', __( 'A legacied version already exists. Please delete it first to be able to create a new legacy for this certificate.', 'lifterlms' ) );
 		}
@@ -97,11 +97,13 @@ class LLMS_Certificate_Migrator {
 		$post_status = get_post_status( $certificate_id );
 
 		// maintain the post status during rollback to legacy.
-		$legacy_id = wp_update_post( array(
-			'post_id' => $legacy,
-			'post_status' => $post_status,
-			'post_parent' => 0,
-		) );
+		$legacy_id = wp_update_post(
+			array(
+				'post_id' => $legacy,
+				'post_status' => $post_status,
+				'post_parent' => 0,
+			)
+		);
 
 		// do nothing to the migrated version.
 
@@ -118,11 +120,9 @@ class LLMS_Certificate_Migrator {
 	 *  from one that is absent in the db, a direct db query is needed.
 	 * (The other reliable difference is the markup of the content)
 	 *
-	 * @param 	$certificate_id Post ID of certificate
-	 *
-	 * @return	bool
-	 *
-	 * @since   [version]
+	 * @param  $certificate_id Post ID of certificate
+	 * @return bool
+	 * @since  [version]
 	 */
 	public static function is_legacy( $certificate_id ) {
 
@@ -146,22 +146,19 @@ class LLMS_Certificate_Migrator {
 
 		$certificate = get_post( $certificate_id );
 
-		if( empty( $certificate->post_parent ) ) {
+		if ( empty( $certificate->post_parent ) ) {
 			return false;
 		}
 
 		$modern = get_post( $certificate->post_parent );
 
-		if( 'llms_certificate' !== $modern->post_type ) {
+		if ( 'llms_certificate' !== $modern->post_type ) {
 			return false;
 		}
 
 		return $modern->ID;
 
-
 	}
-
-
 
 	/**
 	 * Swaps the engagement's association with certificate.
@@ -178,16 +175,16 @@ class LLMS_Certificate_Migrator {
 		// locate engagement using $old_certificate_id.
 		$engagements = get_posts(
 			array(
-				'post_type'=> 'llms_engagement',
+				'post_type' => 'llms_engagement',
 				'post_status' => 'any',
 				'meta_query' => array(
 					array(
 						'key'   => '_llms_engagement',
 						'value' => $from_certificate_id,
 						'type' => 'NUMERIC',
-					)
-				)
-			)
+					),
+				),
+			),
 		);
 
 		// no engagements found, bail
