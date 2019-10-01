@@ -88,14 +88,15 @@ class LLMS_Certificate_Bulk_Migrator {
 
 		global $wpdb;
 
-		$query_sql = $wpdb->prepare(
-			"SELECT p.ID FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as pm ON p.ID=pm.post_id WHERE p.post_type = '%1s' AND p.post_parent = 0 AND ( pm.meta_key = '%2s' OR pm.meta_key = '%3s' )",
+		$query_sql = "SELECT p.ID FROM $wpdb->posts as p LEFT JOIN $wpdb->postmeta as pm ON p.ID=pm.post_id WHERE p.post_type = %1s AND p.post_parent = 0 AND ( pm.meta_key = %2s OR pm.meta_key = %3s )";
+
+		$values = array(
 			'llms_certificate',
 			'_llms_certificate_title',
-			'_llms_certificate_image'
+			'_llms_certificate_image',
 		);
 
-		return $wpdb->get_results( $query_sql );
+		return $wpdb->get_results( $wpdb->prepare( $query_sql, $values ) );
 
 	}
 
@@ -108,9 +109,14 @@ class LLMS_Certificate_Bulk_Migrator {
 
 		global $wpdb;
 
-		$query_sql = "SELECT post_parent FROM $wpdb->posts WHERE post_type = 'llms_certificate' AND post_parent > 0";
+		$query_sql = "SELECT post_parent FROM $wpdb->posts WHERE post_type = %s AND post_parent > %d";
 
-		return $wpdb->get_results( $query_sql );
+		$values = array(
+			'llms_certificate',
+			0,
+		);
+
+		return $wpdb->get_results( $wpdb->prepare( $query_sql, $values ) );
 	}
 
 	/**

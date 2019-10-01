@@ -128,9 +128,15 @@ class LLMS_Certificate_Migrator {
 
 		global $wpdb;
 
-		$query_sql = "SELECT * FROM $wpdb->postmeta WHERE post_id=%d AND ( meta_key = '_llms_certificate_title' OR meta_key = '_llms_certificate_image' )";
+		$query_sql = "SELECT * FROM $wpdb->postmeta WHERE post_id=%d AND ( meta_key = %1s OR meta_key = %2s )";
 
-		$meta_info = $wpdb->get_results( $wpdb->prepare( $query_sql, $certificate_id ) );
+		$values = array(
+			$certificate_id,
+			'_llms_certificate_title',
+			'_llms_certificate_image',
+		);
+
+		$meta_info = $wpdb->get_results( $wpdb->prepare( $query_sql, $values ) );
 
 		// no legacy metadata found, not legacy
 		if ( empty( $meta_info ) ) {
@@ -184,7 +190,7 @@ class LLMS_Certificate_Migrator {
 						'type' => 'NUMERIC',
 					),
 				),
-			),
+			)
 		);
 
 		// no engagements found, bail
@@ -239,7 +245,12 @@ class LLMS_Certificate_Migrator {
 		global $wpdb;
 
 		// get all the current metadata rows.
-		$post_metas = $wpdb->get_results( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id={$from_certificate_id}" );
+		$post_metas = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d',
+				$from_certificate_id
+			)
+		);
 
 		// if there's no metadata, return early.
 		if ( 0 === count( $post_metas ) ) {
@@ -247,10 +258,15 @@ class LLMS_Certificate_Migrator {
 		}
 
 		// delete all existing metadata added through wp_insert_post().
-		$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE post_id={$to_certificate_id}" );
+		$wpdb->query(
+			$wpdb->prepare(
+				'DELETE FROM $wpdb->postmeta WHERE post_id = %d',
+				$to_certificate_id
+			)
+		);
 
 		// start constructing insert query statement.
-		$sql_query = "INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) ";
+		$sql_query = $wpdb->prepare( 'INSERT INTO $wpdb->postmeta ( post_id, meta_key, meta_value ) ' );
 
 		// construct statement fragments for duplicating and inserting each metadata.
 		foreach ( $post_metas as $meta ) {
@@ -267,7 +283,7 @@ class LLMS_Certificate_Migrator {
 			$meta_value = addslashes( $meta->meta_value );
 
 			// setup copying to new post's ID
-			$sql_query_sel[] = "SELECT $to_certificate_id, '$meta_key', '$meta_value'";
+			$sql_query_sel[] = $wpdb->prepare( 'SELECT %d, %1s, %2s;', $to_certificate_id, $meta_key, $meta_value );
 		}
 
 		// merge all metadata insertion fragments.

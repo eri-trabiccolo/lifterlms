@@ -74,7 +74,7 @@ class LLMS_Module_Loader {
 	/**
 	 * Constructor
 	 */
-	private function __construct(){
+	private function __construct() {
 		$this->info = $this->load_info();
 		$this->loaded = $this->load();
 	}
