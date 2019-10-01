@@ -67,8 +67,8 @@ class LLMS_Certificate_Builder {
 	/**
 	 * Add toolbar button
 	 */
-	private function toolbar_button(){
-		if ( ! LLMS_CERTIFICATE_ENABLE_TOOLBAR_BUTTON ){
+	private function toolbar_button() {
+		if ( ! LLMS_CERTIFICATE_ENABLE_TOOLBAR_BUTTON ) {
 			return;
 		}
 		include_once 'includes/admin/class-llms-certificate-builder-toolbar.php';
@@ -78,7 +78,7 @@ class LLMS_Certificate_Builder {
 	 * Load migration functionality
 	 */
 	public function load_migrator() {
-		if ( ! LLMS_CERTIFICATE_ENABLE_MIGRATION ){
+		if ( ! LLMS_CERTIFICATE_ENABLE_MIGRATION ) {
 			return;
 		}
 		include_once 'includes/migration/class-llms-certificate-migrator.php';
