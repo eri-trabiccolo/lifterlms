@@ -78,14 +78,6 @@ final class LifterLMS {
 	public $session = null;
 
 	/**
-	 * Modules Loaded
-	 *
-	 * @var array
-	 * @since [version]
-	 */
-	public $modules = array();
-
-	/**
 	 * Main Instance of LifterLMS
 	 * Ensures only one instance of LifterLMS is loaded or can be loaded.
 	 *
@@ -453,6 +445,9 @@ final class LifterLMS {
 
 		$this->includes_theme_support();
 
+		// module loader.
+		include_once 'includes/modules/class-llms-module-loader.php';
+
 	}
 
 	/**
@@ -460,13 +455,10 @@ final class LifterLMS {
 	 *
 	 * @since [version] Introduced
 	 *
-	 * @return void
+	 * @return LLMS_Module_loader
 	 */
 	private function load_modules() {
-
-		include_once 'includes/modules/class-llms-module-loader.php';
-
-		$this->modules = LLMS_Module_Loader::load();
+		return LLMS_Module_Loader::instance();
 	}
 
 	/**

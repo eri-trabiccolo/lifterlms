@@ -39,11 +39,52 @@ defined( 'ABSPATH' ) || exit;
 class LLMS_Module_Loader {
 
 	/**
+	 * Singleton instance of LifterLMS.
+	 *
+	 * @var LifterLMS
+	 */
+	protected static $_instance = null;
+
+	/**
+	 * List loaded modules
+	 *
+	 * @var array
+	 */
+	public $loaded = array();
+
+	/**
+	 * List of module information
+	 *
+	 * @var array
+	 */
+	private $info = array();
+
+	/**
+	 * Main Instance of LifterLMS Module Loader
+	 *
+	 * @return LLMS_Module_Loader
+	 * @since  [version] Introduced
+	 */
+	public static function instance() {
+		if ( is_null( self::$_instance ) ) {
+			self::$_instance = new self(); }
+		return self::$_instance;
+	}
+
+	/**
+	 * Constructor
+	 */
+	private function __construct(){
+		$this->info = $this->load_info();
+		$this->loaded = $this->load();
+	}
+
+	/**
 	 * Loads Modules.
 	 *
 	 * @since    [version] Introduced
 	 */
-	public static function load() {
+	private function load() {
 
 		/**
 		 * Filters list of LifterLMS modules just before load.
@@ -64,7 +105,7 @@ class LLMS_Module_Loader {
 		 *
 		 * @since    [version] Introduced.
 		 */
-		$to_load = apply_filters( 'lifterlms_modules_to_load', self::load_info() );
+		$to_load = apply_filters( 'lifterlms_modules_to_load', $this->info );
 
 		// initialise after-load information.
 		$loaded = array();
@@ -121,7 +162,7 @@ class LLMS_Module_Loader {
 	 *
 	 * @since    [version]
 	 */
-	private static function load_info() {
+	private function load_info() {
 
 		// get a list of directories inside the modules directory.
 		$directories = glob( LLMS_PLUGIN_DIR . 'includes/modules/*', GLOB_ONLYDIR );
