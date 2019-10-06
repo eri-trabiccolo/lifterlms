@@ -1,17 +1,17 @@
 <?php
 /**
- * Certificate Builder Toolbar Button
+ * Certificate Builder Toolbar Button.
  *
  * @package LifterLMS/Modules/Certificate_Builder
  *
- * @since [version]
+ * @since   [version] Introduced
  * @version [version]
  */
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main Toolbar Button Class
+ * Adds Build button to WP Toolbar.
  *
  * @since [version] Introduced
  */
@@ -19,13 +19,15 @@ class LLMS_Certificate_Builder_Toolbar {
 
 	/**
 	 * Constructor
+	 *
+	 * @since [version] Introduced
 	 */
 	public function __construct() {
 		$this->hook();
 	}
 
 	/**
-	 * Add the toolbar hooks
+	 * Hooks into tollbar.
 	 *
 	 * @since [version] Introduced
 	 */
@@ -34,9 +36,9 @@ class LLMS_Certificate_Builder_Toolbar {
 	}
 
 	/**
-	 * Create a toolbar button
+	 * Create a toolbar button.
 	 *
-	 * @admin_bar WP_Admin_Bar
+	 * @param $admin_bar WP_Admin_Bar
 	 *
 	 * @since [version] Introduced
 	 */
@@ -44,13 +46,14 @@ class LLMS_Certificate_Builder_Toolbar {
 
 		global $post;
 
-		// bail on other screens
+		// Bail on non-post screens.
 		if ( empty( $post ) ) {
 			return;
 		}
 
-		// Check if user has the right permissions to see the button.
+		// Bail if user doesn't have permissions to see the button.
 		if ( is_admin() ) {
+
 			$current_screen = get_current_screen();
 
 			if ( ! ( 'post' == $current_screen->base
@@ -59,11 +62,16 @@ class LLMS_Certificate_Builder_Toolbar {
 			 ) ) {
 				return;
 			}
+
 		}
 
 		// Only load on certificate screens.
 		if ( 'llms_certificate' === $post->post_type && current_user_can( 'edit_post', $post->ID ) ) {
+
+			// Fetch the build URL.
 			$build_link = llms_certificate_build_url( $post );
+
+			// Add menu item.
 			$admin_bar->add_menu(
 				array(
 					'id'    => 'build',
@@ -77,3 +85,9 @@ class LLMS_Certificate_Builder_Toolbar {
 }
 
 return new LLMS_Certificate_Builder_Toolbar();
+
+/**
+ * Redundance exists
+ * Because creators resist
+ * All instruction lists.
+ */

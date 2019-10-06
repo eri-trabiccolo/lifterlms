@@ -33,19 +33,19 @@ class LLMS_Certificate_Builder {
 	 */
 	public function init() {
 
-		// load all constants
+		// load all constants.
 		$this->constants();
 
-		// load migrator and extend editor on dashboard
+		// load migrator and extend editor on dashboard.
 		if ( is_admin() ) {
 			$this->load_migrator();
 			$this->extend_editor();
 		}
 
-		// toolbar button
-		$this->toolbar_button();
+		// toolbar button.
+		$this->add_toolbar_button();
 
-		// load builder
+		// load builder.
 		$this->load_builder();
 
 	}
@@ -96,7 +96,7 @@ class LLMS_Certificate_Builder {
 	 *
 	 * @since [version] Introduced.
 	 */
-	private function toolbar_button() {
+	private function add_toolbar_button() {
 
 		// Bail if the constant is toggled off.
 		if ( false === LLMS_CERTIFICATE_BUILDER_ENABLE_TOOLBAR_BUTTON ) {
@@ -116,7 +116,7 @@ class LLMS_Certificate_Builder {
 	 */
 	public function load_migrator() {
 
-		// Bail if the constant is toggled off
+		// Bail if the constant is toggled off.
 		if ( ! LLMS_CERTIFICATE_BUILDER_ENABLE_MIGRATION ) {
 			return;
 		}
@@ -132,7 +132,7 @@ class LLMS_Certificate_Builder {
 		include_once 'includes/migration/class-llms-certificate-bulk-migrator.php';
 
 		/**
-		 * Class that loads the migration metabox on certificates
+		 * Class that loads the migration metabox on certificates.
 		 */
 		include_once 'includes/admin/class-llms-certificate-migration-metabox.php';
 	}
@@ -165,7 +165,7 @@ class LLMS_Certificate_Builder {
 		/**
 		 * Common functions for builder.
 		 */
-		include_once 'includes/llms-certificate-builder-functions.php';
+		include_once 'includes/functions/llms-certificate-builder-functions.php';
 
 		// no need to load on the dashboard
 		if ( ! is_admin() ) {
