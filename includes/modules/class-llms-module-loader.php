@@ -3,7 +3,6 @@
  * Contains Module loader class.
  *
  * @package LifterLMS/Modules
- *
  * @since [version] Introduced
  * @version [version]
  */
@@ -39,18 +38,20 @@ defined( 'ABSPATH' ) || exit;
 class LLMS_Module_Loader {
 
 	/**
-	 * Singleton instance of LifterLMS.
+	 * Singleton instance of LLMS_Module_Loader.
 	 *
-	 * @var LifterLMS
+	 * @var    LLMS_Module_Loader
+	 * @since [version] Introduced
 	 */
 	protected static $_instance = null;
 
 	/**
-	 * List loaded modules
+	 * List loaded modules.
 	 *
-	 * @var array
+	 * @var   array
+	 * @since [version] Introduced
 	 */
-	public $loaded = array();
+	private $loaded = array();
 
 	/**
 	 * List of module information
@@ -62,8 +63,8 @@ class LLMS_Module_Loader {
 	/**
 	 * Main Instance of LifterLMS Module Loader
 	 *
-	 * @return LLMS_Module_Loader
 	 * @since  [version] Introduced
+	 * @return LLMS_Module_Loader
 	 */
 	public static function instance() {
 		if ( is_null( self::$_instance ) ) {
@@ -73,6 +74,8 @@ class LLMS_Module_Loader {
 
 	/**
 	 * Constructor
+	 *
+	 * @since [version] Introduced
 	 */
 	private function __construct() {
 		$this->info = $this->load_info();
@@ -82,7 +85,7 @@ class LLMS_Module_Loader {
 	/**
 	 * Loads Modules.
 	 *
-	 * @since    [version] Introduced
+	 * @since [version] Introduced
 	 */
 	private function load() {
 
@@ -103,7 +106,7 @@ class LLMS_Module_Loader {
 		 *        ...
 		 *    )
 		 *
-		 * @since    [version] Introduced.
+		 * @since [version] Introduced.
 		 */
 		$to_load = apply_filters( 'lifterlms_modules_to_load', $this->info );
 
@@ -140,7 +143,7 @@ class LLMS_Module_Loader {
 			 * If you want specific information related to the modules' functionality,
 			 * look for hooks within the module itself.
 			 *
-			 * @since [version]
+			 * @since [version] Introduced.
 			 */
 			do_action( "lifterlms_module_{$module['name']}_loaded", $module );
 
@@ -149,7 +152,9 @@ class LLMS_Module_Loader {
 		/**
 		 * Fires after all the modules are loaded.
 		 *
-		 * @since    [version] Introduced.
+		 * @param $loaded array Information about all loaded modules
+		 *
+		 * @since [version] Introduced
 		 */
 		do_action( 'lifterlms_modules_loaded', $loaded );
 
@@ -160,7 +165,7 @@ class LLMS_Module_Loader {
 	/**
 	 * Loads Module Information.
 	 *
-	 * @since    [version]
+	 * @since [version] Introduced
 	 */
 	private function load_info() {
 
