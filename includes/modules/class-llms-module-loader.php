@@ -54,14 +54,14 @@ class LLMS_Module_Loader {
 	private $loaded = array();
 
 	/**
-	 * List of module information
+	 * List of module information.
 	 *
 	 * @var array
 	 */
 	private $info = array();
 
 	/**
-	 * Main Instance of LifterLMS Module Loader
+	 * Main Instance of LifterLMS Module Loader.
 	 *
 	 * @since  [version] Introduced
 	 * @return LLMS_Module_Loader
@@ -73,7 +73,7 @@ class LLMS_Module_Loader {
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 * @since [version] Introduced
 	 */

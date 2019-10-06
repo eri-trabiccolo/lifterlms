@@ -151,6 +151,8 @@ class LLMS_Certificate_Migration_Metabox extends LLMS_Admin_Metabox {
 
 }
 
+return new LLMS_Certificate_Migration_Metabox();
+
 /*
  * Wheel turns on its own,
  * Change always sits at the throne,
