@@ -3,7 +3,7 @@
  * Admin Assets Class
  *
  * @since 1.0.0
- * @version 3.35.0
+ * @version [version]
  */
 defined( 'ABSPATH' ) || exit;
 
@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  * @since 3.35.0 Explicitly set asset versions.
  * @since 3.35.1 Don't reference external scripts & styles.
+ * @since [version]
  */
 class LLMS_Admin_Assets {
 
@@ -92,14 +93,15 @@ class LLMS_Admin_Assets {
 	}
 
 	/**
-	 * Enqueue scripts
+	 * Enqueue scripts.
 	 *
 	 * @since 1.0.0
 	 * @since 3.22.0 Unknown.
 	 * @since 3.35.0 Explicitly set asset versions.
 	 * @since 3.35.1 Don't reference external scripts & styles.
+	 * @since [version]
 	 *
-	 * @return   void
+	 * @return void
 	 */
 	public function admin_scripts() {
 
@@ -264,6 +266,9 @@ class LLMS_Admin_Assets {
 			}
 
 			wp_enqueue_script( 'llms-builder', LLMS_PLUGIN_URL . 'assets/js/llms-builder' . LLMS_ASSETS_SUFFIX . '.js', array( 'jquery', 'jquery-ui-sortable', 'jquery-ui-draggable', 'backbone', 'underscore', 'post', 'llms-quill' ), LLMS()->version, true );
+
+			// enable builder localization.
+			add_filter( 'llms_l10n_add_builder_strings', '__return_true' );
 
 		} elseif ( 'lifterlms_page_llms-add-ons' === $screen->id ) {
 
