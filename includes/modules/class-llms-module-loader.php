@@ -115,13 +115,8 @@ class LLMS_Module_Loader {
 
 		foreach ( $to_load as $module ) {
 
-			// define the constant as true if it hasn't been defined explicitly.
-			if ( ! defined( $module['constant_name'] ) ) {
-				define( $module['constant_name'], true );
-			}
-
-			// bail, if the constant's value is explcitly defined to false.
-			if ( constant( $module['constant_name'] ) === false ) {
+			// bail, if the constant's value is explicitly defined to false.
+			if ( defined( $module['constant_name'] ) && constant( $module['constant_name'] ) === false ) {
 				continue;
 			}
 
@@ -159,6 +154,30 @@ class LLMS_Module_Loader {
 		do_action( 'lifterlms_modules_loaded', $loaded );
 
 		return $loaded;
+
+	}
+
+	/**
+	 * Checks whether a module has been loaded.
+	 *
+	 * @since [version]
+	 *
+	 * @param string $name Module name.
+	 * @return bool Whether or not the given module has been loaded.
+	 */
+	public function is_module_loaded( $name ) {
+
+		$loaded = in_array( $name, wp_list_pluck( $this->loaded, 'name' ), true );
+
+		/**
+		 * Filters whether or not a module has been loaded.
+		 *
+		 * @since [version]
+		 *
+		 * @param bool               $loaded  Whether or not the given module has been loaded.
+		 * @param LLMS_Module_Loader $request This LLMS_Module_Loader instance.
+		 */
+		return apply_filters( 'llms_is_module_loaded', $loaded, $this );
 
 	}
 
