@@ -1,4 +1,4 @@
-'<?php
+<?php
 /**
  * Post Table/Editor extensions
  *
