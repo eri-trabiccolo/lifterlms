@@ -64,6 +64,29 @@ LLMS.Tracking = function( settings ) {
 		var all = store.get( 'events', [] );
 		all.push( event );
 		store.set( 'events', all );
+
+		// if cannot store the latest event...
+		if ( all.length > store.get( 'events', [] ).length ) {
+			var _temp = store.getAll();
+			store.clear('events');
+
+			// send _temp via ajax
+			LLMS.Ajax.call( {
+				data: {
+					action: 'llms_persist_events',
+					llmsTracking: _temp
+				},
+				error: function( xhr, status, error ) {
+
+					console.log( xhr, status, error );
+
+				}
+
+			} );
+
+			console.log('last cookie not stored');
+		}
+
 		// Make sure the nonce is set for server-side verification.
 		store.set( 'nonce', settings.nonce );
 
