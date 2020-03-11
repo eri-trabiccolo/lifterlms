@@ -59,6 +59,9 @@ class LLMS_Events {
 		add_action( 'init', array( $this, 'register_events' ) );
 		add_action( 'init', array( $this, 'store_cookie' ) );
 
+		add_action( 'wp_ajax_nopriv_llms_persist_events', array( $this, 'persist_events' ) );
+		add_action( 'wp_ajax_llms_persist_events', array( $this, 'persist_events' ) );
+
 	}
 
 	/**
@@ -407,7 +410,6 @@ class LLMS_Events {
 	 * @return void
 	 */
 	public function store_cookie() {
-
 		$cookie = ! empty( $_COOKIE['llms-tracking'] ) ? json_decode( wp_unslash( $_COOKIE['llms-tracking'] ), true ) : false; // phpcs:ignore: WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized via $this->sanitize_raw_event().
 		if ( ! $cookie ) {
 			return;
@@ -426,9 +428,54 @@ class LLMS_Events {
 				}
 			}
 		}
-
+		$this->store_client_events( $_COOKIE ); // phpcs:ignore: WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized via $this->sanitize_raw_event().
 		setcookie( 'llms-tracking', '', time() - 60, '/' );
 
 	}
 
+	public function persist_events() {
+
+		$cookie = ! empty( $_COOKIE['llms-tracking'] ) ? json_decode( wp_unslash( $_COOKIE['llms-tracking'] ), true ) : false;
+		if ( ! $cookie ) {
+			return;
+		}
+
+		if ( ! empty( $cookie['nonce'] ) && wp_verify_nonce( $cookie['nonce'], 'llms-tracking' ) && get_current_user_id() ) {
+
+			if ( ! empty( $cookie['events'] ) && is_array( $cookie['events'] ) ) {
+
+				foreach ( $cookie['events'] as $event ) {
+
+					$event = $this->prepare_event( $event );
+					if ( ! is_wp_error( $event ) ) {
+						$this->record( $event );
+					}
+				}
+			}
+		}
+
+	}
+
+	private function store_client_events( $cookie ) {
+
+		$cookie = ! empty( $cookie['llms-tracking'] ) ? json_decode( wp_unslash( $cookie['llms-tracking'] ), true ) : false;
+		if ( ! $cookie ) {
+			return;
+		}
+
+		if ( ! empty( $cookie['nonce'] ) && wp_verify_nonce( $cookie['nonce'], 'llms-tracking' ) && get_current_user_id() ) {
+
+			if ( ! empty( $cookie['events'] ) && is_array( $cookie['events'] ) ) {
+
+				foreach ( $cookie['events'] as $event ) {
+
+					$event = $this->prepare_event( $event );
+					if ( ! is_wp_error( $event ) ) {
+						$this->record( $event );
+					}
+				}
+			}
+		}
+
+	}
 }
