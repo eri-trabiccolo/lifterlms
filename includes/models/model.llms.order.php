@@ -893,7 +893,20 @@ class LLMS_Order extends LLMS_Post_Model {
 		}
 
 		/**
-		 * Filter the next upcoming payment reminder date.
+		 * Filters the number of days before the upcoming payment due date when to notify the customer
+		 *
+		 * @since [version]
+		 *
+		 * @param int        $days  The number of days before the upcoming payment due date when to notify the customer.
+		 * @param LLMS_Order $order Order object.
+		 */
+		$days = apply_filters( 'llms_order_payment_reminder_days', get_option( 'llms_' ,1 ), $this );
+
+		// Sanitize: makes sure it's always a negative number.
+		$days = -1 * min( 1, absint( $days ) );
+
+		/**
+		 * Filters the next upcoming payment reminder date
 		 *
 		 * A timestamp should always be returned as the conversion to the requested format
 		 * will be performed on the returned value.
@@ -904,7 +917,7 @@ class LLMS_Order extends LLMS_Post_Model {
 		 * @param LLMS_Order $order                          Order object.
 		 * @param string     $format                         Requested date format.
 		 */
-		$upcoming_payment_reminder_time = apply_filters( 'llms_order_get_next_upcoming_payment_reminder_date', strtotime( '-1 day', strtotime( $next_payment_date ) ), $this, $format );
+		$upcoming_payment_reminder_time = apply_filters( 'llms_order_get_next_upcoming_payment_reminder_date', strtotime( "{$days} day", strtotime( $next_payment_date ) ), $this, $format );
 
 		return date_i18n( $format, $upcoming_payment_reminder_time );
 
